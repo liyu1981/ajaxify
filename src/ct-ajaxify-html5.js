@@ -119,7 +119,7 @@
               .replace(/<(html|head|body|title|meta|script)([\s\>])/gi,
                        '<div class="document-$1"$2')
               .replace(/<\/(html|head|body|title|meta|script)\>/gi, '</div>'));
-  };
+  }
 
   function ensureAjaxifyUI() {
     // if not disable progress ui, insert it
@@ -216,8 +216,8 @@
           // Fetch the scripts
           var $scripts = $dataContent.find('.document-script');
           if (!$scripts.length) {
-            $scripts = $dataBody.find('.document-script')
-          };
+            $scripts = $dataBody.find('.document-script');
+          }
           if ($scripts.length) {
             $scripts.detach();
           }
@@ -225,7 +225,7 @@
           // Fetch the content
           var contentHtml = $dataContent.html();
           if (!contentHtml) {
-            contentHtml = $dataBody.html()
+            contentHtml = $dataBody.html();
           }
           if (!contentHtml) {
             document.location.href = url;
@@ -283,7 +283,7 @@
           // ensure the UI
           ensureAjaxifyUI();
 
-          trigger('ajaxifyLoadingEnd')
+          trigger('ajaxifyLoadingEnd');
           $body.removeClass('ajaxify-loading');
           trigger('ajaxifyStateChangeComplete');
           $window.trigger('statechangecomplete');
@@ -303,7 +303,7 @@
       });
 
     ensureAjaxifyUI();
-  };
+  }
 
   // now attach to document
   $(ajaxifyLoad);
