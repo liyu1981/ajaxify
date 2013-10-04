@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Page 1</title>
+  <script src="../lib/jquery.min.js"></script>
+  <script src="../lib/underscore-min.js"></script>
+  <script src="../dist/ctAjaxify.js"></script>
+  <style>
+    body.ajaxify-loading h1 {
+      color: red !important;
+    }
+  </style>
+</head>
+<body>
+<div>
+  <div>
+    <h1 style="color: white; background-color: black;">Title</h1>
+    <p>content1</p>
+    <a id="Next" href="page2.html">Next</a>
+  </div>
+  <script>
+    $(function() {
+      console.log('page 1');
+      });
+  </script>
+</div>
+</body>
+</html>

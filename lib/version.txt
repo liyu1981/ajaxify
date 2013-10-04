@@ -1,0 +1,23 @@
+dependency
+==========
+  jquery.js
+  jquery.scrollto.js
+  jquery.history.js
+
+version
+=======
+  jquery.js
+  v1.9.1
+  grabbed by LI, Yu, 2013-09-26
+  http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
+
+  jquery.scrollto.js
+  updated version
+  grabbed by LI, Yu, 2013-09-26
+  http://balupton.github.io/jquery-scrollto/lib/jquery-scrollto.js
+
+  jquery.history.js
+  updated version
+  grabbed by LI, Yu, 2013-09-26
+  http://browserstate.github.io/history.js/scripts/bundled/html4+html5/jquery.history.js
+
