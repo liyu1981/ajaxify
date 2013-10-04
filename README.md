@@ -71,3 +71,7 @@ Event lists
 * ajaxifyAjaxError
     param: [jqXHR, textStatus, errorThrown]
 
+License
+=======
+
+Same as original, licensed under the [New BSD License](http://opensource.org/licenses/BSD-3-Clause) 
