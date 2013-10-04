@@ -1,25 +1,32 @@
-Original Copyright Info:
-========================
-   Ajaxify
-   v1.0.1 - 30 September, 2012
-   https://github.com/browserstate/ajaxify
+Copyright Info
+=======================
 
-   Adapted by LI, Yu (liyu@clustertech.com)
+Ajaxify
+v1.0.1 - 30 September, 2012
+https://github.com/browserstate/ajaxify
 
-Dependency:
-===========
-  jquery.js
-  underscore.js
+Adapted by LI, Yu (liyu@clustertech.com)
 
-Build in lib:
-=============
-  jquery.history.js
-  jquery-scorllto.js
+Dependency
+==========
 
-Usage:
-======
-  normally:
+* jquery.js
+* underscore.js
 
+Build in lib
+============
+
+(check versions in the lib dir)
+
+* jquery.history.js
+* jquery-scorllto.js
+
+Usage
+=====
+
+normally:
+
+```html
     <script src="jquery.min.js"></script>
     <script src="underscore-min.js"></script>
     <script>
@@ -32,25 +39,35 @@ Usage:
     <script src="ctAjaxify.min.js"></script>
     // now you can bind events like
     //   window.ctAjaxify.on(<event>, function() { ... });
+```
 
-  if you want to disable this, just
+if you want to disable this, just
 
+```html
     <html disableAjaxify>
+```
 
-Events:
-===========
-  use window.ctAjaxify.on('event', func) to bind
+Events
+======
 
-  ajaxifyLoadingBegin
-  ajaxifyAjaxBeforeSend
+Bind events as 
+
+```javascript
+   window.ctAjaxify.on('event', func)
+```
+
+Event lists
+
+* ajaxifyLoadingBegin
+* ajaxifyAjaxBeforeSend
     param: [jqXHR, settings]
-  ajaxifyBeforeUpdateContent
+* ajaxifyBeforeUpdateContent
     param: [contentHtml]
-  ajaxifyAfterUpdateContent
-  ajaxifyBeforeInsertScript
+* ajaxifyAfterUpdateContent
+* ajaxifyBeforeInsertScript
     param: [$newScriptNode, $originScriptNode]
-  ajaxifyLoadingEnd
-  ajaxifyStateChangeComplete
-  ajaxifyAjaxError
+* ajaxifyLoadingEnd
+* ajaxifyStateChangeComplete
+* ajaxifyAjaxError
     param: [jqXHR, textStatus, errorThrown]
 
