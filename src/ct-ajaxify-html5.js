@@ -9,14 +9,14 @@
 */
 ;(function($, _) {
 
-	var History = window.History,
-		  document = window.document;
+  var History = window.History,
+      document = window.document;
 
-	// Check to see if History.js is enabled for our Browser
-	if (!History.enabled) {
+  // Check to see if History.js is enabled for our Browser
+  if (!History.enabled) {
     console.log('Error: No history.js support!');
-		return false;
-	}
+    return false;
+  }
 
   var isDisabled =
     (History.emulated.pushState || History.emulated.hasChange) ||
@@ -79,11 +79,11 @@
 
   _.defaults(a.options,
     {
-			contentSelector: '#content,article:first,.article:first,.post:first',
- 	    scrollOptions: {
-				duration: 800,
-				easing: 'swing'
-			},
+      contentSelector: '#content,article:first,.article:first,.post:first',
+      scrollOptions: {
+        duration: 800,
+        easing: 'swing'
+      },
       effect: {
         fadeOut: 0,
         fadeIn: 0
@@ -113,7 +113,7 @@
 
   // HTML Helper
   function documentHtml(html) {
-  	return $.trim(
+    return $.trim(
             String(html)
               .replace(/<\!DOCTYPE[^>]*>/i, '')
               .replace(/<(html|head|body|title|meta|script)([\s\>])/gi,
@@ -133,34 +133,34 @@
   function ajaxifyLoad() {
     var $window = $(window),
         $body = $(document.body),
-			  rootUrl = History.getRootUrl();
+        rootUrl = History.getRootUrl();
 
-		var $content = $(a.options.contentSelector).filter(':first'),
-			  contentNode = $content.get(0);
+    var $content = $(a.options.contentSelector).filter(':first'),
+        contentNode = $content.get(0);
 
-		// Ensure Content
-		if ($content.length === 0) {
-			$content = $body;
+    // Ensure Content
+    if ($content.length === 0) {
+      $content = $body;
       contentNode = $content.get(0);
-		}
+    }
 
-		// jquery internal link selector helper
-		$.expr[':'].internal = function(obj, index, meta, stack) {
-			var url = $(obj).attr('href') || '';
-			return (url.substring(0, rootUrl.length) === rootUrl ||
+    // jquery internal link selector helper
+    $.expr[':'].internal = function(obj, index, meta, stack) {
+      var url = $(obj).attr('href') || '';
+      return (url.substring(0, rootUrl.length) === rootUrl ||
               url.indexOf(':') === -1);
-		};
+    };
 
-		// inject the jquery Ajaxify Helper
-		$.fn.ajaxify = function() {
-			var $this = $(this);
+    // inject the jquery Ajaxify Helper
+    $.fn.ajaxify = function() {
+      var $this = $(this);
       // Hijack all links
-			$this.delegate('a:internal:not(.no-ajaxify)', 'click',
+      $this.delegate('a:internal:not(.no-ajaxify)', 'click',
         function(event) {
-				  var $this = $(this),
-				  	  url = $this.attr('href'),
-				  	  title = $this.attr('title') || null;
-				  if (event.which == 2 || event.metaKey) {
+          var $this = $(this),
+              url = $this.attr('href'),
+              title = $this.attr('title') || null;
+          if (event.which == 2 || event.metaKey) {
             // ctrl + click / meta + click will be the same
             return true;
           } else {
@@ -173,70 +173,70 @@
         return $this;
     };
 
-		// Now hijack current internal links
-		$body.ajaxify();
+    // Now hijack current internal links
+    $body.ajaxify();
 
-		// Hook into State Changes
+    // Hook into State Changes
     // Use on() instead of bind() for late binding
-		$window.on('statechange',
+    $window.on('statechange',
       function() {
-			// Prepare Variables
-			var State = History.getState(),
-				  url = State.url,
-				  relativeUrl = url.replace(rootUrl, '');
+      // Prepare Variables
+      var State = History.getState(),
+          url = State.url,
+          relativeUrl = url.replace(rootUrl, '');
 
-			// Set Loading
-			$body.addClass('ajaxify-loading');
+      // Set Loading
+      $body.addClass('ajaxify-loading');
       trigger('ajaxifyLoadingBegin');
 
       if (a.options.effect && a.options.effect.fadeOut) {
         if (_.isFunction(a.options.fadeOut)) {
           a.options.fadeOut($content);
         } else {
-			    // Start Fade Out
-			    // Animating to opacity to 0 still keeps the element's height intact
-			    // Which prevents that annoying pop bang issue when loading in
+          // Start Fade Out
+          // Animating to opacity to 0 still keeps the element's height intact
+          // Which prevents that annoying pop bang issue when loading in
           // new content
           $content.animate({ opacity: 0 }, a.options.effect.fadeOut);
         }
       }
 
-			// Ajax Request the Traditional Page
-			$.ajax({
-				url: url,
+      // Ajax Request the Traditional Page
+      $.ajax({
+        url: url,
         beforeSend: function(jqXHR, settings) {
           trigger('ajaxifyAjaxBeforeSend', [jqXHR, settings]);
         },
-				success: function(data, textStatus, jqXHR){
-					var $data = $(documentHtml(data));
+        success: function(data, textStatus, jqXHR){
+          var $data = $(documentHtml(data));
           var $dataBody = $data.find('.document-body:first');
           var $dataContent = $dataBody.find(a.options.contentSelector)
                                       .filter(':first');
 
-					// Fetch the scripts
-					var $scripts = $dataContent.find('.document-script');
+          // Fetch the scripts
+          var $scripts = $dataContent.find('.document-script');
           if (!$scripts.length) {
             $scripts = $dataBody.find('.document-script')
           };
-					if ($scripts.length) {
-						$scripts.detach();
-					}
+          if ($scripts.length) {
+            $scripts.detach();
+          }
 
-					// Fetch the content
-					var contentHtml = $dataContent.html();
+          // Fetch the content
+          var contentHtml = $dataContent.html();
           if (!contentHtml) {
             contentHtml = $dataBody.html()
           }
-					if (!contentHtml) {
-						document.location.href = url;
-						return false;
-					}
+          if (!contentHtml) {
+            document.location.href = url;
+            return false;
+          }
 
           trigger('ajaxifyBeforeUpdateContent', [contentHtml]);
 
-					// Update the content
-					$content.stop(true, true);
-					$content.html(contentHtml).ajaxify();
+          // Update the content
+          $content.stop(true, true);
+          $content.html(contentHtml).ajaxify();
           $content.show(0);
           if (a.options.effect && a.options.effect.fadeIn) {
             if (_.isFunction(a.options.effect.fadeIn)) {
@@ -246,37 +246,37 @@
             }
           }
 
-					// Update the title
-					document.title = $data.find('.document-title:first').text();
-					try {
-						document.getElementsByTagName('title')[0].innerHTML =
+          // Update the title
+          document.title = $data.find('.document-title:first').text();
+          try {
+            document.getElementsByTagName('title')[0].innerHTML =
               document.title.replace('<','&lt;')
                             .replace('>','&gt;')
                             .replace(' & ',' &amp; ');
-					}
-					catch (Exception) {
+          }
+          catch (Exception) {
             // just ignore the exception
           }
 
           trigger('ajaxifyAfterUpdateContent');
 
-					// Add back the scripts
-					$scripts.each(function() {
-						var $script = $(this),
+          // Add back the scripts
+          $scripts.each(function() {
+            var $script = $(this),
                 scriptText = $script.text(),
                 scriptNode = document.createElement('script');
-						if ($script.attr('src')) {
-							if ( !$script[0].async ) { scriptNode.async = false; }
-							scriptNode.src = $script.attr('src');
-						}
+            if ($script.attr('src')) {
+              if ( !$script[0].async ) { scriptNode.async = false; }
+              scriptNode.src = $script.attr('src');
+            }
             scriptNode.appendChild(document.createTextNode(scriptText));
             trigger('ajaxifyBeforeInsertScript', [$(scriptNode), $script]);
             contentNode.appendChild(scriptNode);
-					});
+          });
 
-					// Complete the change
+          // Complete the change
           /* http://balupton.com/projects/jquery-scrollto */
-					if ($body.ScrollTo || false) {
+          if ($body.ScrollTo || false) {
             $body.ScrollTo(a.options.scrollOptions);
           }
 
@@ -284,17 +284,17 @@
           ensureAjaxifyUI();
 
           trigger('ajaxifyLoadingEnd')
-					$body.removeClass('ajaxify-loading');
+          $body.removeClass('ajaxify-loading');
           trigger('ajaxifyStateChangeComplete');
-					$window.trigger('statechangecomplete');
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
+          $window.trigger('statechangecomplete');
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
           trigger('ajaxifyAjaxError', [jqXHR, textStatus, errorThrown]);
-					document.location.href = url;
-					return false;
-				}
-			}); // end ajax
-		}); // end onStateChange
+          document.location.href = url;
+          return false;
+        }
+      }); // end ajax
+    }); // end onStateChange
 
     // bind beforeunload to notify user that this page goes to refresh
     $(window).on('beforeunload',
@@ -305,7 +305,7 @@
     ensureAjaxifyUI();
   };
 
-	// now attach to document
-	$(ajaxifyLoad);
+  // now attach to document
+  $(ajaxifyLoad);
 
 })($, _);
