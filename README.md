@@ -1,11 +1,22 @@
 Copyright Info
-=======================
+==============
 
 Ajaxify
 v1.0.1 - 30 September, 2012
 https://github.com/browserstate/ajaxify
 
 Adapted by LI, Yu (liyu@clustertech.com)
+
+Enhancement
+===========
+
+* Integrated solution framework for turning static pages into ajaxify pages.
+The jquery history & scrollto plugin is integrated.
+* Compatible with require.js.
+* Configurable options. (see usage)
+* Events support.
+* Build-in progress indicator support. (And configurable).
+* Intensively tested and bugs fixed.
 
 Dependency
 ==========
@@ -50,7 +61,7 @@ if you want to disable this, just
 Events
 ======
 
-Bind events as 
+Bind events as
 
 ```javascript
    window.ctAjaxify.on('event', func)
@@ -74,4 +85,4 @@ Event lists
 License
 =======
 
-Same as original, licensed under the [New BSD License](http://opensource.org/licenses/BSD-3-Clause) 
+Same as original, licensed under the [New BSD License](http://opensource.org/licenses/BSD-3-Clause)
