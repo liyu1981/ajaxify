@@ -79,6 +79,8 @@
 
   _.defaults(a.options,
     {
+      allowHeaderScriptLink: true,
+      allowHeaderScriptRaw: false,
       contentSelector: '#content,article:first,.article:first,.post:first',
       scrollOptions: {
         duration: 800,
@@ -209,11 +211,15 @@
         },
         success: function(data, textStatus, jqXHR){
           var $data = $(documentHtml(data));
+          var $dataHead = $data.find('.document-head:first');
           var $dataBody = $data.find('.document-body:first');
           var $dataContent = $dataBody.find(a.options.contentSelector)
                                       .filter(':first');
 
-          // Fetch the scripts
+          // Fetch the head scripts
+          var $headScripts = $dataHead.find('.document-script');
+
+          // Fetch the body scripts
           var $scripts = $dataContent.find('.document-script');
           if (!$scripts.length) {
             $scripts = $dataBody.find('.document-script');
@@ -261,6 +267,30 @@
           trigger('ajaxifyAfterUpdateContent');
 
           // Add back the scripts
+          // header
+          $headScripts.each(function() {
+            var $script = $(this);
+            var scriptNode = null;
+            if ($script.attr('src') && a.options.allowHeaderScriptLink) {
+              // insert missing script links of header
+              if (!$(document).find('script[src=\"' +
+                                   $script.attr('src') + '\"]')) {
+                scriptNode = document.createElement('script');
+                if ( !$script[0].async ) { scriptNode.async = false; }
+                scriptNode.src = $script.attr('src');
+                $(document.head).append(scriptNode);
+              }
+            } else if (a.options.allowHeaderScriptRaw) {
+              // insert raw script of header
+              // this is dangerous if the raw script is not in closure
+              // defaultly is not allowed
+              scriptNode = document.createElement('script');
+              scriptNode.appendChild(document.createTextNode($script.text()));
+              $(document.head).append(scriptNode);
+            }
+          });
+
+          // body
           $scripts.each(function() {
             var $script = $(this),
                 scriptText = $script.text(),
