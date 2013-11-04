@@ -395,6 +395,15 @@ window.JSON||(window.JSON={}),function(){function f(a){return a<10?"0"+a:a}funct
     }
   }
 
+  /* assume that meta tag is like
+       <meta http-equiv="refresh" content="0; url=...">
+     which after documentHtml will be
+       <document-meta http-equiv="refresh" content="0; url=...">
+     NOTE:
+       currently the content refresh time interval parameter is ignored
+  */
+  var metaRefreshRegex = /<meta\s+http-equiv\s*=\s*["']refresh["']\s+content\s*=\s*["']\d+;\s*url\s*=(.*)["']>/i;
+
   // main procedure to ajax current page
   function ajaxifyLoad() {
     var $window = $(window),
@@ -474,6 +483,14 @@ window.JSON||(window.JSON={}),function(){function f(a){return a<10?"0"+a:a}funct
           trigger('ajaxifyAjaxBeforeSend', [jqXHR, settings]);
         },
         success: function(data, textStatus, jqXHR){
+          // test for meta refresh tag, and replace state
+          var m = metaRefreshRegex.exec(data);
+          if (m !== null) {
+            var refreshUrl = m[1].trim();
+            History.replaceState(null, '', refreshUrl);
+            return;
+          }
+
           var $data = $(documentHtml(data));
           var $dataHead = $data.find('.document-head:first');
           var $dataBody = $data.find('.document-body:first');
