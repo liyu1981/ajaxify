@@ -200,18 +200,6 @@
       $body.addClass('ajaxify-loading');
       trigger('ajaxifyLoadingBegin');
 
-      if (a.options.effect && a.options.effect.fadeOut) {
-        if (_.isFunction(a.options.fadeOut)) {
-          a.options.fadeOut($content);
-        } else {
-          // Start Fade Out
-          // Animating to opacity to 0 still keeps the element's height intact
-          // Which prevents that annoying pop bang issue when loading in
-          // new content
-          $content.animate({ opacity: 0 }, a.options.effect.fadeOut);
-        }
-      }
-
       // Ajax Request the Traditional Page
       $.ajax({
         url: url,
@@ -259,81 +247,76 @@
 
           // Update the content
           $content.stop(true, true);
-          $content.html(contentHtml).ajaxify();
-          $content.show(0);
-          if (a.options.effect && a.options.effect.fadeIn) {
-            if (_.isFunction(a.options.effect.fadeIn)) {
-              a.options.effect.fadeIn($content);
-            } else {
-              $content.animate({ opacity: 100}, a.options.effect.fadeIn);
-            }
-          }
-
-          // Update the title
-          document.title = $data.find('.document-title:first').text();
-          try {
-            document.getElementsByTagName('title')[0].innerHTML =
-              document.title.replace('<','&lt;')
-                            .replace('>','&gt;')
-                            .replace(' & ',' &amp; ');
-          }
-          catch (Exception) {
-            // just ignore the exception
-          }
-
-          trigger('ajaxifyAfterUpdateContent');
-
-          // Add back the scripts
-          // header
-          $headScripts.each(function() {
-            var $script = $(this);
-            var scriptNode = null;
-            if ($script.attr('src') && a.options.allowHeaderScriptLink) {
-              // insert missing script links of header
-              if (!$(document).find('script[src=\"' +
-                                   $script.attr('src') + '\"]')) {
-                scriptNode = document.createElement('script');
-                if ( !$script[0].async ) { scriptNode.async = false; }
-                scriptNode.src = $script.attr('src');
-                $(document.head).append(scriptNode);
+          $content.animate({ opacity: 0 }, a.options.effect.fadeOut,
+            function() {
+              $content.html(contentHtml).ajaxify();
+              if (_.isFunction(a.options.effect.fadeIn)) {
+                a.options.effect.fadeIn($content);
+              } else {
+                $content.animate({ opacity: 100 }, a.options.effect.fadeIn);
               }
-            } else if (a.options.allowHeaderScriptRaw) {
-              // insert raw script of header
-              // this is dangerous if the raw script is not in closure
-              // defaultly is not allowed
-              scriptNode = document.createElement('script');
-              scriptNode.appendChild(document.createTextNode($script.text()));
-              $(document.head).append(scriptNode);
-            }
-          });
 
-          // body
-          $scripts.each(function() {
-            var $script = $(this),
-                scriptText = $script.text(),
-                scriptNode = document.createElement('script');
-            if ($script.attr('src')) {
-              if ( !$script[0].async ) { scriptNode.async = false; }
-              scriptNode.src = $script.attr('src');
-            }
-            scriptNode.appendChild(document.createTextNode(scriptText));
-            trigger('ajaxifyBeforeInsertScript', [$(scriptNode), $script]);
-            contentNode.appendChild(scriptNode);
-          });
+              // Update the title
+              document.title = $data.find('.document-title:first').text();
+              try {
+                document.getElementsByTagName('title')[0].innerHTML =
+                  document.title.replace('<','&lt;')
+                                .replace('>','&gt;')
+                                .replace(' & ',' &amp; ');
+              }
+              catch (Exception) {
+                // just ignore the exception
+              }
 
-          // Complete the change
-          /* http://balupton.com/projects/jquery-scrollto */
-          if ($body.ScrollTo || false) {
-            $body.ScrollTo(a.options.scrollOptions);
-          }
+              trigger('ajaxifyAfterUpdateContent');
 
-          // ensure the UI
-          ensureAjaxifyUI();
+              // Add back the scripts
+              // header
+              $headScripts.each(function() {
+                var $script = $(this);
+                var scriptNode = null;
+                if ($script.attr('src') && a.options.allowHeaderScriptLink) {
+                  // insert missing script links of header
+                  if (!$(document).find('script[src=\"' +
+                                       $script.attr('src') + '\"]')) {
+                    scriptNode = document.createElement('script');
+                    if ( !$script[0].async ) { scriptNode.async = false; }
+                    scriptNode.src = $script.attr('src');
+                    $(document.head).append(scriptNode);
+                  }
+                } else if (a.options.allowHeaderScriptRaw) {
+                  // insert raw script of header
+                  // this is dangerous if the raw script is not in closure
+                  // defaultly is not allowed
+                  scriptNode = document.createElement('script');
+                  scriptNode.appendChild(
+                    document.createTextNode($script.text()));
+                  $(document.head).append(scriptNode);
+                }
+              });
 
-          trigger('ajaxifyLoadingEnd');
-          $body.removeClass('ajaxify-loading');
-          trigger('ajaxifyStateChangeComplete');
-          $window.trigger('statechangecomplete');
+              // body
+              $scripts.each(function() {
+                var $script = $(this),
+                    scriptText = $script.text(),
+                    scriptNode = document.createElement('script');
+                if ($script.attr('src')) {
+                  if ( !$script[0].async ) { scriptNode.async = false; }
+                  scriptNode.src = $script.attr('src');
+                }
+                scriptNode.appendChild(document.createTextNode(scriptText));
+                trigger('ajaxifyBeforeInsertScript', [$(scriptNode), $script]);
+                contentNode.appendChild(scriptNode);
+              });
+
+              // ensure the UI
+              ensureAjaxifyUI();
+
+              trigger('ajaxifyLoadingEnd');
+              $body.removeClass('ajaxify-loading');
+              trigger('ajaxifyStateChangeComplete');
+              $window.trigger('statechangecomplete');
+            });
         },
         error: function(jqXHR, textStatus, errorThrown) {
           trigger('ajaxifyAjaxError', [jqXHR, textStatus, errorThrown]);

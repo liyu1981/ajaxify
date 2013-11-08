@@ -30,7 +30,6 @@ Build in lib
 (check versions in the lib dir)
 
 * jquery.history.js
-* jquery-scorllto.js
 
 Usage
 =====
