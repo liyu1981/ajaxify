@@ -173,6 +173,10 @@ window.JSON||(window.JSON={}),function(){function f(a){return a<10?"0"+a:a}funct
           var $this = $(this),
               url = $this.attr('href'),
               title = $this.attr('title') || null;
+          if (!url || url[0] === '#') {
+            // If url is a hash or not set, just return
+            return true;
+          }
           if (event.which == 2 || event.metaKey) {
             // ctrl + click / meta + click will be the same
             return true;
