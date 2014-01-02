@@ -47,19 +47,23 @@
       if (!document.getElementById(ID_UI_STYLE)) {
         var styleNode = document.createElement('style');
         styleNode.id = ID_UI_STYLE;
-        styleNode.appendChild(document.createTextNode(
-          '@-webkit-keyframes ajaxify-ui-p-a {' +
-          '  0% { left: -100%; }' +
-          '  100% { left: -2%; } }' +
-          '  body.ajaxify-loading .ajaxify-ui-p { display: block; }' +
-          '  body .ajaxify-ui-p {' +
-          '    display: none; position: fixed; top: 0px; left: 0px;' +
-          '    height: 3px; width: 100%; left: -2%; z-index: 9999;' +
-          '    background: #5bb75b;' +
-          '    animation-name: ajaxify-ui-pa;' +
-          '    -webkit-animation-name: ajaxify-ui-p-a;' +
-          '    animation-duration: 1s;' +
-          '    -webkit-animation-duration: 1s; }'
+        styleNode.appendChild(document.createTextNode([
+            '@keyframes ajaxify-ui-p-a {',
+            '  0% { left: -100%; }',
+            '  100% { left: -2%; } }',
+            '@-webkit-keyframes ajaxify-ui-p-a {',
+            '  0% { left: -100%; }',
+            '  100% { left: -2%; } }',
+            'body.ajaxify-loading .ajaxify-ui-p { display: block; }',
+            'body .ajaxify-ui-p {',
+            '  display: none; position: fixed; top: 0px; left: 0px;',
+            '  height: 3px; width: 100%; left: -2%; z-index: 9999;',
+            '  background: #5bb75b;',
+            '  animation-name: ajaxify-ui-pa;',
+            '  -webkit-animation-name: ajaxify-ui-p-a;',
+            '  animation-duration: 1s;',
+            '  -webkit-animation-duration: 1s; }'
+          ].join()
         ));
         $(document.head).append(styleNode);
       }
